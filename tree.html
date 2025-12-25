@@ -3,34 +3,31 @@
 <head>
   <meta charset="utf-8">
   <title>Christmas Tree</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSP（不包含 frame-ancestors） -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self' 'unsafe-inline';
+                 script-src 'self';">
+
   <link rel="stylesheet" href="css/tree.css">
 </head>
 <body>
 
-<!-- 背景雪花 Canvas -->
 <canvas id="snow"></canvas>
 
-<!-- 圣诞树容器 -->
-<div id="tree-container">
-  <div id="tree"></div>
-  <div id="star">⭐</div>
+<div id="scene">
+  <div id="tree">
+    <div id="star" aria-hidden="true">⭐</div>
+  </div>
 </div>
 
-<!-- viewer 放大照片 -->
-<div id="viewer">
-  <img id="viewer-img" alt="Christmas memory enlarged">
+<div id="viewer" aria-hidden="true">
+  <img id="viewer-img" alt="Christmas memory">
 </div>
 
-<!-- 音乐按钮 -->
-<button id="music-btn" aria-label="Toggle Music">🎵</button>
-
-<!-- 背景音乐 -->
-<audio id="bgm" src="audio/christmas.mp3" autoplay loop></audio>
-
-<!-- 引入树 JS -->
 <script src="js/tree.js"></script>
-
 </body>
 </html>
