@@ -40,8 +40,16 @@ body {
   width: 100vw;
   height: 100vh;
   perspective: 1200px;
+  background: url("../images/tree/background.jpg") center / cover no-repeat;
+  z-index: 2;
 }
-
+/* ===== Snow ===== */
+#snow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
 #tree {
   position: absolute;
   top: 20%;                 /* 星星下方 */
