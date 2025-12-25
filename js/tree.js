@@ -212,10 +212,16 @@ document.addEventListener("pointermove", e => {
 document.addEventListener("pointerup", () => dragging = false);
 
 /* ===== 动画 ===== */
+const TREE_Y_OFFSET = 80; // 你可以调节像素值，控制整体下移
 function animate() {
   rotation += (target - rotation) * 0.08;
-  tree.style.transform = `translateX(-50%) rotateY(${rotation}deg)`;
+  tree.style.transform = `translateX(-50%) translateY(${TREE_Y_OFFSET}px) rotateY(${rotation}deg)`;
   requestAnimationFrame(animate);
 }
+// function animate() {
+//   rotation += (target - rotation) * 0.08;
+//   tree.style.transform = `translateX(-50%) rotateY(${rotation}deg)`;
+//   requestAnimationFrame(animate);
+// }
 animate();
 
