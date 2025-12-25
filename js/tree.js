@@ -15,7 +15,7 @@ let targetRotation = 0;
 
 function updateTransform() {
   tree.style.transform =
-    `translate3d(-50%, calc(-50% + 40px), 0) rotateY(${currentRotation}deg)`;
+    `translate3d(-50%, calc(-50%), 0) rotateY(${currentRotation}deg)`;
 }
 
 /* ===== Build Tree ===== */
