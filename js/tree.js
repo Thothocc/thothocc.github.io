@@ -1,4 +1,8 @@
-// ===== 音乐继续播放 =====
+// =========================
+// tree.js
+// =========================
+
+// ===== 音乐跨页面继续播放 =====
 const bgm = document.getElementById("bgm");
 if (localStorage.getItem("playMusic") === "1") {
   bgm.play().catch(()=>{});
@@ -12,18 +16,36 @@ const images = [];
 for (let i = 1; i <= 99; i++) images.push(`images/tree/${i}.jpg`);
 
 let index = 0;
+
+// ===== 层结构 =====
 const layers = [
-  { n:4, r:60 }, { n:6, r:80 }, { n:8, r:100 },
-  { n:10, r:120 }, { n:10, r:140 }, { n:12, r:160 },
-  { n:12, r:180 }, { n:14, r:200 }, { n:14, r:220 },
-  { n:16, r:240 }, { n:20, r:260 }, { n:20, r:280 }
+  { n:3, r:60 },
+  { n:5, r:80 },
+  { n:6, r:100 },
+  { n:8, r:120 },
+  { n:8, r:140 },
+  { n:9, r:160 },
+  { n:9, r:180 },
+  { n:11, r:200 },
+  { n:11, r:220 },
+  { n:12, r:240 },
+  { n:13, r:260 },
+  { n:13, r:280 }
 ];
 
+// ===== 屏幕尺寸与树顶底位置 =====
+const H = window.innerHeight;
+const treeTop = 0.2 * H;    // 星星顶部 20%
+const treeBottom = 0.7 * H; // 树底距屏幕底部 30%
+const treeHeight = treeBottom - treeTop;
+
+// ===== 生成圣诞树 =====
 layers.forEach((layer, i) => {
-  const y = -i * 45;
+  const y = treeTop + i * (treeHeight / (layers.length - 1));
   for (let j = 0; j < layer.n; j++) {
     if (!images[index]) break;
     const angle = (360 / layer.n) * j;
+
     const img = document.createElement("img");
     img.src = images[index++];
     img.className = "leaf";
@@ -33,16 +55,18 @@ layers.forEach((layer, i) => {
       translateZ(${layer.r}px)
       translateY(${y}px)
     `;
+
     // 点击放大
     img.addEventListener("click", e => {
       viewerImg.src = img.src;
       viewer.classList.add("show");
     });
+
     tree.appendChild(img);
   }
 });
 
-// 关闭 viewer
+// ===== viewer 点击关闭 =====
 viewer.addEventListener("click", ()=> viewer.classList.remove("show"));
 
 // ===== 拖拽旋转 =====
@@ -62,7 +86,7 @@ document.addEventListener("pointermove", e => {
 
 document.addEventListener("pointerup", ()=>isDown=false);
 
-// ===== 雪花 =====
+// ===== 雪花 Canvas =====
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 let w, h;
