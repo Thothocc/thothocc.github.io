@@ -1,59 +1,35 @@
-const cover = document.getElementById("cover");
-const scene = document.getElementById("scene");
 const tree = document.getElementById("tree");
-const viewer = document.getElementById("viewer");
-const viewerImg = document.getElementById("viewer-img");
+const scene = document.getElementById("scene");
 
-/* ===== Enter ===== */
-cover.addEventListener("click", () => {
-  cover.classList.add("hidden");
-  scene.classList.remove("hidden");
+tree.style.transform = "translate(-50%, -50%) rotateY(0deg)";
 
-  initTree();
-});
+const layers = 10;
+const perLayer = 10;
+const baseRadius = 300;
+const heightStep = 35;
 
-/* ===== Create Tree ===== */
-function initTree() {
-  tree.innerHTML = "";
-  tree.style.transform = "translate(-50%, -50%) rotateY(0deg)";
+let imgIndex = 1;
 
-  const layers = 10;
-  const perLayer = 10;
-  const baseRadius = 320;
-  const heightStep = 38;
+for (let l = 0; l < layers; l++) {
+  const radius = baseRadius * (1 - l / layers);
+  const y = l * heightStep;
 
-  let imgIndex = 1;
+  for (let i = 0; i < perLayer; i++) {
+    const img = document.createElement("img");
+    img.src = `images/tree/${imgIndex}.jpg?v=1`;
+    img.alt = `Christmas memory ${imgIndex}`;
+    img.className = "photo";
 
-  for (let l = 0; l < layers; l++) {
-    const radius = baseRadius * (1 - l / layers);
-    const y = l * heightStep;
+    const angle = (360 / perLayer) * i;
+    img.style.transform =
+      `rotateY(${angle}deg) translateZ(${radius}px) translateY(${-y}px)`;
 
-    for (let i = 0; i < perLayer; i++) {
-      const angle = (360 / perLayer) * i;
-      const img = document.createElement("img");
-
-      img.src = `images/tree/${imgIndex}.jpg`;
-      img.className = "photo";
-
-      img.style.transform = `
-        rotateY(${angle}deg)
-        translateZ(${radius}px)
-        translateY(${-y}px)
-      `;
-
-      img.addEventListener("click", e => {
-        e.stopPropagation();
-        viewerImg.src = img.src;
-        viewer.classList.remove("hidden");
-      });
-
-      tree.appendChild(img);
-      imgIndex++;
-    }
+    tree.appendChild(img);
+    imgIndex++;
   }
 }
 
-/* ===== Drag Rotate ===== */
+/* ===== Drag rotate ===== */
 let dragging = false;
 let lastX = 0;
 let rotateY = 0;
@@ -67,12 +43,8 @@ scene.addEventListener("mousemove", e => {
   if (!dragging) return;
   rotateY += (e.clientX - lastX) * 0.3;
   lastX = e.clientX;
-  tree.style.transform = `translate(-50%, -50%) rotateY(${rotateY}deg)`;
+  tree.style.transform =
+    `translate(-50%, -50%) rotateY(${rotateY}deg)`;
 });
 
 window.addEventListener("mouseup", () => dragging = false);
-
-/* ===== Close Viewer ===== */
-viewer.addEventListener("click", () => {
-  viewer.classList.add("hidden");
-});
