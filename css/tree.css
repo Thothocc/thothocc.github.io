@@ -98,7 +98,7 @@ html, body {
   color: white;
   text-shadow: 0 0 4px #000;
   transition: transform 0.2s, background 0.3s;
-  z-index: 999;
+  z-index: 10000;
 }
 
 #music-btn:hover {
