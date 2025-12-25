@@ -148,78 +148,73 @@
 // snow();
 
 const tree = document.getElementById("tree");
-const scene = document.getElementById("scene");
 const viewer = document.getElementById("viewer");
 const viewerImg = document.getElementById("viewer-img");
 
-/* ===== Tree Geometry ===== */
+/* ===== 参数 ===== */
 const layers = 9;
-const perLayer = 11;
-const baseRadius = 180;
-const heightStep = 28;
+const photosPerLayer = 11;
+const maxRadius = 160;
+const layerGap = 28;
 
-/* ===== Rotation State ===== */
-let rotation = 0;
-let targetRotation = 0;
-
-/* ===== Build Tree ===== */
 let imgIndex = 1;
 
+/* ===== 构建树 ===== */
 for (let l = 0; l < layers; l++) {
-  const radius = baseRadius * (1 - l / layers);
-  const y = l * heightStep; // 永远向下
+  const radius = maxRadius * (1 - l / layers);
+  const y = l * layerGap; // 只向下，绝不反转
 
-  for (let i = 0; i < perLayer; i++) {
+  for (let i = 0; i < photosPerLayer; i++) {
     const img = document.createElement("img");
     img.src = `images/tree/${imgIndex}.jpg`;
     img.className = "photo";
 
-    const angle = (360 / perLayer) * i;
+    const angle = (360 / photosPerLayer) * i;
 
     img.style.transform = `
+      translateX(-50%)
+      translateY(${y}px)
       rotateY(${angle}deg)
       translateZ(${radius}px)
-      translateY(${y}px)
     `;
 
-    img.addEventListener("click", e => {
+    img.onclick = e => {
       viewerImg.src = img.src;
       viewer.classList.add("show");
       e.stopPropagation();
-    });
+    };
 
     tree.appendChild(img);
     imgIndex++;
   }
 }
 
-/* ===== Viewer ===== */
-viewer.addEventListener("click", () => {
-  viewer.classList.remove("show");
-});
+/* ===== 查看器关闭 ===== */
+viewer.onclick = () => viewer.classList.remove("show");
 
-/* ===== Interaction ===== */
+/* ===== 旋转控制 ===== */
+let rotation = 0;
+let target = 0;
 let dragging = false;
 let lastX = 0;
 
-scene.addEventListener("pointerdown", e => {
+document.addEventListener("pointerdown", e => {
   dragging = true;
   lastX = e.clientX;
 });
 
-scene.addEventListener("pointermove", e => {
+document.addEventListener("pointermove", e => {
   if (!dragging) return;
-  targetRotation += (e.clientX - lastX) * 0.4;
+  target += (e.clientX - lastX) * 0.4;
   lastX = e.clientX;
 });
 
-scene.addEventListener("pointerup", () => dragging = false);
-scene.addEventListener("pointercancel", () => dragging = false);
+document.addEventListener("pointerup", () => dragging = false);
 
-/* ===== Animation ===== */
+/* ===== 动画 ===== */
 function animate() {
-  rotation += (targetRotation - rotation) * 0.08;
-  tree.style.transform = `rotateY(${rotation}deg)`;
+  rotation += (target - rotation) * 0.08;
+  tree.style.transform = `translateX(-50%) rotateY(${rotation}deg)`;
   requestAnimationFrame(animate);
 }
 animate();
