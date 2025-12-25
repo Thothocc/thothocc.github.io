@@ -1,117 +1,68 @@
+// ===== 音乐继续播放 =====
+const bgm = document.getElementById("bgm");
+if (localStorage.getItem("playMusic") === "1") {
+  bgm.play().catch(()=>{});
+}
+
+// ===== 图片数组 =====
 const tree = document.getElementById("tree");
-const scene = document.getElementById("scene");
 const viewer = document.getElementById("viewer");
 const viewerImg = document.getElementById("viewer-img");
+const images = [];
+for (let i = 1; i <= 99; i++) images.push(`images/tree/${i}.jpg`);
 
-/* ===== Tree Geometry ===== */
-const layers = 9;
-const perLayer = 11;
-const baseRadius = 180;
-const heightStep = 26;
+let index = 0;
+const layers = [
+  { n:4, r:60 }, { n:6, r:80 }, { n:8, r:100 },
+  { n:10, r:120 }, { n:10, r:140 }, { n:12, r:160 },
+  { n:12, r:180 }, { n:14, r:200 }, { n:14, r:220 },
+  { n:16, r:240 }, { n:20, r:260 }, { n:20, r:280 }
+];
 
-/* 整体下移 40px，居中 */
-let currentRotation = 0;
-let targetRotation = 0;
-
-function updateTransform() {
-  tree.style.transform =
-    `translate3d(-50%, calc(-50% + 40px), 0) rotateY(${currentRotation}deg)`;
-}
-
-/* ===== Build Tree ===== */
-let imgIndex = 1;
-for (let l = 0; l < layers; l++) {
-  const radius = baseRadius * (1 - l / layers);
-  const y = l * heightStep;
-
-  for (let i = 0; i < perLayer; i++) {
+layers.forEach((layer, i) => {
+  const y = -i * 45;
+  for (let j = 0; j < layer.n; j++) {
+    if (!images[index]) break;
+    const angle = (360 / layer.n) * j;
     const img = document.createElement("img");
-    img.src = `images/tree/${imgIndex}.jpg`;
-    img.alt = `Christmas photo ${imgIndex}`;
-    img.className = "photo";
+    img.src = images[index++];
+    img.className = "leaf";
 
-    const angle = (360 / perLayer) * i;
-    img.style.transform =
-      `rotateY(${angle}deg)
-       translateZ(${radius}px)
-       translateY(${-y}px)`;
-
-    /* Tap / Click */
-    let downX = 0;
-    img.addEventListener("touchstart", e => {
-      downX = e.touches[0].clientX;
-      img.classList.add("active");
-    });
-
-    img.addEventListener("touchend", e => {
-      img.classList.remove("active");
+    img.style.transform = `
+      rotateY(${angle}deg)
+      translateZ(${layer.r}px)
+      translateY(${y}px)
+    `;
+    // 点击放大
+    img.addEventListener("click", e => {
       viewerImg.src = img.src;
       viewer.classList.add("show");
     });
-
-    img.addEventListener("mousedown", e => {
-      img.classList.add("active");
-      e.stopPropagation();
-    });
-
-    img.addEventListener("mouseup", e => {
-      img.classList.remove("active");
-      viewerImg.src = img.src;
-      viewer.classList.add("show");
-      e.stopPropagation();
-    });
-
     tree.appendChild(img);
-    imgIndex++;
   }
-}
-
-/* ===== Close Viewer ===== */
-viewer.addEventListener("click", () => {
-  viewer.classList.remove("show");
 });
 
-/* ===== Rotation (Mouse + Touch) ===== */
-let dragging = false;
-let lastX = 0;
+// 关闭 viewer
+viewer.addEventListener("click", ()=> viewer.classList.remove("show"));
 
-scene.addEventListener("mousedown", e => {
-  dragging = true;
+// ===== 拖拽旋转 =====
+let rotY = 0, isDown = false, lastX = 0;
+
+document.addEventListener("pointerdown", e => {
+  isDown = true;
   lastX = e.clientX;
 });
 
-scene.addEventListener("mousemove", e => {
-  if (!dragging) return;
-  targetRotation += (e.clientX - lastX) * 0.35;
+document.addEventListener("pointermove", e => {
+  if(!isDown) return;
+  rotY += (e.clientX - lastX) * 0.3;
+  tree.style.transform = `rotateY(${rotY}deg)`;
   lastX = e.clientX;
 });
 
-window.addEventListener("mouseup", () => dragging = false);
+document.addEventListener("pointerup", ()=>isDown=false);
 
-/* Touch（关键：不 passive） */
-scene.addEventListener("touchstart", e => {
-  dragging = true;
-  lastX = e.touches[0].clientX;
-});
-
-scene.addEventListener("touchmove", e => {
-  if (!dragging) return;
-  targetRotation += (e.touches[0].clientX - lastX) * 0.35;
-  lastX = e.touches[0].clientX;
-});
-
-scene.addEventListener("touchend", () => dragging = false);
-
-/* ===== Animation Loop ===== */
-function animate() {
-  currentRotation += (targetRotation - currentRotation) * 0.08;
-  updateTransform();
-  requestAnimationFrame(animate);
-}
-updateTransform();
-animate();
-
-/* ===== Snow ===== */
+// ===== 雪花 =====
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 let w, h;
@@ -123,25 +74,22 @@ function resize() {
 resize();
 window.addEventListener("resize", resize);
 
-const flakes = Array.from({ length: 70 }, () => ({
-  x: Math.random() * w,
-  y: Math.random() * h,
-  r: Math.random() * 2 + 1,
-  v: Math.random() * 0.8 + 0.4
+const flakes = Array.from({length:70},()=>({
+  x: Math.random()*w,
+  y: Math.random()*h,
+  r: Math.random()*2+1,
+  v: Math.random()*0.8+0.4
 }));
 
 function snow() {
-  ctx.clearRect(0, 0, w, h);
+  ctx.clearRect(0,0,w,h);
   ctx.fillStyle = "rgba(255,255,255,0.8)";
-  flakes.forEach(f => {
+  flakes.forEach(f=>{
     ctx.beginPath();
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
     ctx.fill();
     f.y += f.v;
-    if (f.y > h) {
-      f.y = -5;
-      f.x = Math.random() * w;
-    }
+    if(f.y>h){ f.y=-5; f.x=Math.random()*w; }
   });
   requestAnimationFrame(snow);
 }
