@@ -219,69 +219,54 @@
 // }
 // animate();
 
-/* ===== 3D 圣诞树 JS ===== */
-
 const tree = document.getElementById("tree");
 const viewer = document.getElementById("viewer");
 const viewerImg = document.getElementById("viewer-img");
-const canvas = document.getElementById("snow");
-const ctx = canvas.getContext("2d");
 
 /* ===== 参数 ===== */
-const layers = 9;               // 树层数
-const photosPerLayer = 11;      // 每层照片数（均匀）
-const maxRadius = 160;          // 最底层半径
-const layerGap = 28;            // 层间距
-const TREE_Y_OFFSET = 80;       // 整体下移，控制树高度
-const totalPhotos = 99;         // 总共上传的照片数量
+const layers = 9;
+const photosPerLayer = 11;
+const maxRadius = 160;
+const layerGap = 28;
 
 let imgIndex = 1;
 
-/* ===== 构建圣诞树 ===== */
+/* ===== 构建树 ===== */
 for (let l = 0; l < layers; l++) {
-  const radius = maxRadius * (1 - l / layers);   // 上层半径逐渐缩小
-  const y = -l * layerGap;                        // 向上生长
+  const radius = maxRadius * (1 - l / layers);
+  const y = l * layerGap; // 只向下，绝不反转
 
-  // 当前层照片数量（底层多，顶层少）
-  const photosInThisLayer = Math.min(photosPerLayer + l, totalPhotos - imgIndex + 1);
-
-  for (let i = 0; i < photosInThisLayer; i++) {
-    if (imgIndex > totalPhotos) break;
-
+  for (let i = 0; i < photosPerLayer; i++) {
     const img = document.createElement("img");
     img.src = `images/tree/${imgIndex}.jpg`;
-    img.alt = `Christmas photo ${imgIndex}`;
     img.className = "photo";
 
-    const angle = (360 / photosInThisLayer) * i;
+    const angle = (360 / photosPerLayer) * i;
 
     img.style.transform = `
+      translateX(-50%)
+      translateY(${y}px)
       rotateY(${angle}deg)
       translateZ(${radius}px)
-      translateY(${y + TREE_Y_OFFSET}px)
-      translateX(-50%)
     `;
 
-    // 点击放大查看
-    img.addEventListener("click", (e) => {
+    img.onclick = e => {
       viewerImg.src = img.src;
       viewer.classList.add("show");
       e.stopPropagation();
-    });
+    };
 
     tree.appendChild(img);
     imgIndex++;
   }
 }
 
-/* ===== 点击关闭查看器 ===== */
-viewer.addEventListener("click", () => {
-  viewer.classList.remove("show");
-});
+/* ===== 查看器关闭 ===== */
+viewer.onclick = () => viewer.classList.remove("show");
 
-/* ===== 树旋转控制 ===== */
+/* ===== 旋转控制 ===== */
 let rotation = 0;
-let targetRotation = 0;
+let target = 0;
 let dragging = false;
 let lastX = 0;
 
@@ -292,7 +277,7 @@ document.addEventListener("pointerdown", e => {
 
 document.addEventListener("pointermove", e => {
   if (!dragging) return;
-  targetRotation += (e.clientX - lastX) * 0.4;
+  target += (e.clientX - lastX) * 0.4;
   lastX = e.clientX;
 });
 
@@ -300,11 +285,12 @@ document.addEventListener("pointerup", () => dragging = false);
 
 /* ===== 动画 ===== */
 function animate() {
-  rotation += (targetRotation - rotation) * 0.08;
-  tree.style.transform = `rotateY(${rotation}deg)`;
+  rotation += (target - rotation) * 0.08;
+  tree.style.transform = `translateX(-50%) rotateY(${rotation}deg)`;
   requestAnimationFrame(animate);
 }
 animate();
+
 
 /* ===== 雪花特效 ===== */
 let w, h;
