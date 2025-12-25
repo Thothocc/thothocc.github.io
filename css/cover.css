@@ -37,27 +37,29 @@ body {
   opacity: 0.9;
 }
 
-.gift {
+/* .gift {
   position: absolute;
   left: 50%;
   bottom: 18%;
   transform: translateX(-50%);
   font-size: 6rem;
   text-decoration: none;
-}
+} */
 
 /* =========================
-   Gift breathing animation
+   Gift button (🎁)
    ========================= */
 
-#gift {
+.gift {
   position: absolute;
   left: 50%;
-  top: 65%; /* 稍微偏下，视觉更稳 */
+  top: 65%; /* 页面偏下，视觉舒服 */
   transform: translate(-50%, -50%);
-  
+
   font-size: clamp(64px, 12vw, 120px);
+  text-decoration: none;
   cursor: pointer;
+
   user-select: none;
   -webkit-user-select: none;
 
@@ -65,9 +67,16 @@ body {
   will-change: transform;
 }
 
-/* 点击时稍微缩一下，增强反馈 */
-#gift:active {
+/* 点击反馈 */
+.gift:active {
   transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* 桌面端 hover 微发光 */
+@media (hover: hover) {
+  .gift:hover {
+    filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.85));
+  }
 }
 
 /* 呼吸动画 */
@@ -82,3 +91,4 @@ body {
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
