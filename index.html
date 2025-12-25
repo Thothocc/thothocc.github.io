@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>Merry Christmas 🎄</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Merry Christmas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <!-- CSP instead of X-Frame-Options -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self' 'unsafe-inline';
+                 script-src 'self';
+                 frame-ancestors 'none';">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cover.css">
 </head>
 <body>
 
-<!-- ===== Cover ===== -->
 <div id="cover">
-  <img id="cover-bg" src="images/cover.jpg" alt="Merry Christmas">
+  <img
+    id="cover-bg"
+    src="images/cover.jpg?v=1"
+    alt="Christmas cover background">
 
-  <div class="cover-title">
-    <div class="title-main">Merry Christmas!</div>
-    <div class="title-sub">0705pprr</div>
-  </div>
+  <h1 class="title">
+    Merry Christmas<br>
+    <span>0705pprr</span>
+  </h1>
 
-  <div class="gift">🎁</div>
+  <!-- 点击这里跳转 -->
+  <a class="gift"
+     href="tree.html"
+     aria-label="Open Christmas Tree">
+    🎁
+  </a>
 </div>
 
-<!-- ===== Scene ===== -->
-<div id="scene" class="hidden">
-  <div id="tree"></div>
-</div>
-
-<!-- ===== Viewer ===== -->
-<div id="viewer" class="hidden">
-  <img id="viewer-img">
-</div>
-
-<script src="js/tree.js"></script>
 </body>
 </html>
