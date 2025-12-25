@@ -82,3 +82,26 @@ html, body {
   max-height: 90%;
   border-radius: 8px;
 }
+
+#music-btn {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  /* 核心调整：缩小字体尺寸范围（原32px-60px → 20px-40px） */
+  font-size: clamp(20px, 5vw, 40px);
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  /* 核心调整：减少内边距（原0.3em 0.5em → 0.2em 0.35em） */
+  padding: 0.2em 0.35em;
+  cursor: pointer;
+  color: white;
+  text-shadow: 0 0 4px #000;
+  transition: transform 0.2s, background 0.3s;
+  z-index: 100;
+}
+
+#music-btn:hover {
+  transform: scale(1.15);
+  background: rgba(255,255,255,0.4);
+}
