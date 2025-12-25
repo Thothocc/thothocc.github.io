@@ -162,7 +162,7 @@ let imgIndex = 1;
 /* ===== 构建树 ===== */
 for (let l = 0; l < layers; l++) {
   const radius = maxRadius * (1 - l / layers);
-  const y = l * layerGap; // 只向下，绝不反转
+  const y = -l * layerGap; // 只向下，绝不反转
 
   for (let i = 0; i < photosPerLayer; i++) {
     const img = document.createElement("img");
