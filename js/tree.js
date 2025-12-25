@@ -225,3 +225,38 @@ function animate() {
 // }
 animate();
 
+// ===== Snow =====
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const flakes = Array.from({ length: 70 }, () => ({
+  x: Math.random() * w,
+  y: Math.random() * h,
+  r: Math.random() * 2 + 1,
+  v: Math.random() * 0.8 + 0.4
+}));
+
+function snow() {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  flakes.forEach(f => {
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    ctx.fill();
+    f.y += f.v;
+    if (f.y > h) {
+      f.y = -5;
+      f.x = Math.random() * w;
+    }
+  });
+  requestAnimationFrame(snow);
+}
+snow();
