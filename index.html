@@ -3,15 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Merry Christmas</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSP instead of X-Frame-Options -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self';
-                 img-src 'self' data:;
-                 style-src 'self' 'unsafe-inline';
-                 script-src 'self';
-                 frame-ancestors 'none';">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <link rel="stylesheet" href="css/cover.css">
 </head>
@@ -28,13 +20,19 @@
     <span>0705pprr</span>
   </h1>
 
-  <!-- 点击这里跳转 -->
   <a class="gift"
      href="tree.html"
      aria-label="Open Christmas Tree">
     🎁
   </a>
 </div>
+
+<audio id="bgm" src="audio/christmas.mp3" autoplay loop></audio>
+
+<script>
+  // 标记音乐播放
+  localStorage.setItem("playMusic", "1");
+</script>
 
 </body>
 </html>
