@@ -5,16 +5,18 @@
   <title>Merry Christmas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <!-- Google Fonts -->
+  <!-- 花体字体 -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/cover.css">
 </head>
+
 <body>
 
 <div id="cover">
+
   <img
     id="cover-bg"
-    src="images/cover.jpg?v=1"
+    src="images/cover.jpg"
     alt="Christmas cover background">
 
   <h1 class="title">
@@ -22,45 +24,38 @@
     <span class="subtitle">0705pprr</span>
   </h1>
 
-  <!-- 点击跳转 -->
-  <a class="gift"
-     href="tree.html"
-     aria-label="Open Christmas Tree">
-    🎁
-  </a>
+  <!-- 🎁 跳转 -->
+  <a class="gift" href="tree.html" aria-label="Open Christmas Tree">🎁</a>
 
-  <!-- 音乐控制按钮 -->
-  <button id="music-btn" aria-label="Toggle Music">🎵</button>
+  <!-- 🎵 音乐按钮（必须用户点击） -->
+  <button id="music-btn" aria-label="Play Music">🎵</button>
+
 </div>
 
-<!-- 背景音乐 -->
-<audio id="bgm" src="audio/christmas.mp3" autoplay loop></audio>
+<!-- 音乐 -->
+<audio id="bgm" src="audio/christmas.mp3" loop></audio>
 
 <script>
-  // 音乐播放标记
-  if (!localStorage.getItem("playMusic")) localStorage.setItem("playMusic","1");
-
   const bgm = document.getElementById("bgm");
   const btn = document.getElementById("music-btn");
 
-  // 页面加载自动播放
-  if(localStorage.getItem("playMusic")==="1") bgm.play().catch(()=>{});
+  let playing = false;
 
-  // 根据播放状态设置按钮符号
-  function updateBtn(){
-    btn.textContent = bgm.paused ? "⏸️" : "🎵";
-  }
-  updateBtn();
-
-  btn.addEventListener("click", ()=>{
-    if(bgm.paused){
-      bgm.play().catch(()=>{});
-      localStorage.setItem("playMusic","1");
+  btn.addEventListener("click", () => {
+    if (!playing) {
+      bgm.play().then(() => {
+        playing = true;
+        btn.textContent = "⏸️";
+        localStorage.setItem("music", "on");
+      }).catch(err => {
+        console.log("Playback blocked:", err);
+      });
     } else {
       bgm.pause();
-      localStorage.setItem("playMusic","0");
+      playing = false;
+      btn.textContent = "🎵";
+      localStorage.setItem("music", "off");
     }
-    updateBtn();
   });
 </script>
 
