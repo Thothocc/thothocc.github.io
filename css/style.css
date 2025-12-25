@@ -5,7 +5,67 @@ body {
   font-family: sans-serif;
 }
 
-/* ===== Cover ===== */
+/* ===== Cover Fullscreen ===== */
+#cover {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100svh; /* iOS 16+ 完美适配 */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* 背景图 */
+#cover-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== Title ===== */
+.cover-title {
+  position: absolute;
+  top: 8%;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.45);
+  pointer-events: none;
+}
+
+.title-main {
+  font-family: "Great Vibes", "Playfair Display", cursive;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  letter-spacing: 0.05em;
+}
+
+.title-sub {
+  margin-top: 0.3em;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  opacity: 0.9;
+}
+
+/* ===== Gift Icon ===== */
+.gift {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  font-size: clamp(4rem, 10vw, 7rem);
+  animation: gift-breath 2.2s ease-in-out infinite;
+  user-select: none;
+}
+
+@keyframes gift-breath {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.08); }
+}
+
+
+/* /* ===== Cover ===== */
 #cover {
   position: fixed;
   inset: 0;
@@ -19,7 +79,7 @@ body {
   max-width: 60%;
   border-radius: 12px;
   animation: pulse 2s infinite;
-}
+} */
 
 @keyframes pulse {
   0%,100% { transform: scale(1); }
