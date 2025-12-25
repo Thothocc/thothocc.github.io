@@ -47,7 +47,7 @@ html, body {
   left: 47.03%; /* 602/1280 */
   top: 73.1%;  /* 1248/1707 */
   transform: translate(-50%, -50%);
-  font-size: clamp(128px, 24vw, 240px);
+  font-size: clamp(96px, 18vw, 180px);
   cursor: pointer;
   user-select: none;
   animation: gift-breath 2s ease-in-out infinite;
