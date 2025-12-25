@@ -161,10 +161,9 @@ const heightStep = 26;
 let currentRotation = 0;
 let targetRotation = 0;
 
-/* ===== 修改这里：简化transform，让旋转中心在屏幕正中央 ===== */
+/* ===== 关键修改：让树的旋转中心在屏幕正中央 ===== */
 function updateTransform() {
   tree.style.transform = `rotateY(${currentRotation}deg)`;
-  // 只保留旋转，位置由CSS的left:50%; top:50%;控制
 }
 
 /* ===== Build Tree ===== */
@@ -180,7 +179,15 @@ for (let l = 0; l < layers; l++) {
     img.className = "photo";
     
     const angle = (360 / perLayer) * i;
-    img.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) translateY(${-y}px)`;
+    
+    /* ===== 关键修改：调整照片的位置计算 ===== */
+    // 计算树的垂直中心偏移量，使树的视觉中心在屏幕中央
+    const treeTotalHeight = layers * heightStep;
+    const verticalCenterOffset = treeTotalHeight / 2;
+    
+    // 修改Y轴变换，让树的底部在中心，顶部向上延伸
+    // 星星在-250px处，所以最上层应该在-250px左右
+    img.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) translateY(${y - verticalCenterOffset + 40}px)`;
     
     /* Tap / Click */
     let downX = 0;
@@ -255,8 +262,16 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-updateTransform();
-animate();
+// 初始位置修正
+window.addEventListener('load', () => {
+  // 等待所有图片加载完成
+  setTimeout(() => {
+    // 确保树在屏幕正中央
+    tree.style.left = '50%';
+    tree.style.top = '50%';
+    updateTransform();
+  }, 100);
+});
 
 /* ===== Snow ===== */
 const canvas = document.getElementById("snow");
