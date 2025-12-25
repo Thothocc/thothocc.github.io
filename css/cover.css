@@ -50,7 +50,7 @@ html, body {
   font-size: clamp(64px, 12vw, 120px);
   cursor: pointer;
   user-select: none;
-  animation: gift-breath 2.8s ease-in-out infinite;
+  animation: gift-breath 2s ease-in-out infinite;
   will-change: transform;
   text-decoration: none;
 }
