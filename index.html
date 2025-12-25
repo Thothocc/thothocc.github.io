@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <title>Merry Christmas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/cover.css">
 </head>
 <body>
@@ -17,23 +18,50 @@
     alt="Christmas cover background">
 
   <h1 class="title">
-    Merry Christmas
+    Merry Christmas<br>
+    <span class="subtitle">0705pprr</span>
   </h1>
-  <h2>
-    0705pprr
-  </h2>  
+
+  <!-- 点击跳转 -->
   <a class="gift"
      href="tree.html"
      aria-label="Open Christmas Tree">
     🎁
   </a>
+
+  <!-- 音乐控制按钮 -->
+  <button id="music-btn" aria-label="Toggle Music">🎵</button>
 </div>
 
+<!-- 背景音乐 -->
 <audio id="bgm" src="audio/christmas.mp3" autoplay loop></audio>
 
 <script>
-  // 标记音乐播放
-  localStorage.setItem("playMusic", "1");
+  // 音乐播放标记
+  if (!localStorage.getItem("playMusic")) localStorage.setItem("playMusic","1");
+
+  const bgm = document.getElementById("bgm");
+  const btn = document.getElementById("music-btn");
+
+  // 页面加载自动播放
+  if(localStorage.getItem("playMusic")==="1") bgm.play().catch(()=>{});
+
+  // 根据播放状态设置按钮符号
+  function updateBtn(){
+    btn.textContent = bgm.paused ? "⏸️" : "🎵";
+  }
+  updateBtn();
+
+  btn.addEventListener("click", ()=>{
+    if(bgm.paused){
+      bgm.play().catch(()=>{});
+      localStorage.setItem("playMusic","1");
+    } else {
+      bgm.pause();
+      localStorage.setItem("playMusic","0");
+    }
+    updateBtn();
+  });
 </script>
 
 </body>
