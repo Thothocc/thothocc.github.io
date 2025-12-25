@@ -1,64 +1,38 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <title>Christmas Tree</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSP（不包含 frame-ancestors） -->
+  <link rel="stylesheet" href="css/tree.css">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  img-src 'self' data:;
                  style-src 'self' 'unsafe-inline';
-                 script-src 'self';">
-
-  <link rel="stylesheet" href="css/tree.css">
+                 script-src 'self';
+                 frame-ancestors 'none';">
 </head>
 <body>
-
-<canvas id="snow"></canvas>
-
-<div id="scene">
-  <div id="tree">
-    <div id="star" aria-hidden="true">⭐</div>
-  </div>
-</div>
-
-<div id="viewer" aria-hidden="true">
-  <img id="viewer-img" alt="Christmas memory">
-</div>
-
-<script src="js/tree.js"></script>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Photo Tree</title>
-  <link rel="stylesheet" href="css/tree.css" />
-</head>
-<body>
-
   <!-- 背景 -->
   <div id="background"></div>
 
-  <!-- 星星 -->
-  <div id="star">⭐</div>
+  <!-- 雪花 -->
+  <canvas id="snow"></canvas>
 
   <!-- 场景 -->
   <div id="scene">
+    <!-- 星星 -->
+    <div id="star">⭐</div>
+
+    <!-- 树 -->
     <div id="tree"></div>
   </div>
 
   <!-- 查看器 -->
   <div id="viewer">
-    <img id="viewer-img" />
+    <img id="viewer-img" alt="Christmas memory enlarged">
   </div>
 
-  <script src="tree.js"></script>
+  <script src="js/tree.js" defer></script>
 </body>
-<canvas id="snow"></canvas>
 </html>
