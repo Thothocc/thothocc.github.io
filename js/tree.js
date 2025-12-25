@@ -9,9 +9,16 @@ const perLayer = 11;
 const baseRadius = 180;
 const heightStep = 26;
 
-tree.style.transform = "translate3d(-50%, -50%, 0) rotateY(0deg)";
+/* 整体下移 40px，居中 */
+let currentRotation = 0;
+let targetRotation = 0;
 
-/* ===== Create Tree ===== */
+function updateTransform() {
+  tree.style.transform =
+    `translate3d(-50%, calc(-50% + 40px), 0) rotateY(${currentRotation}deg)`;
+}
+
+/* ===== Build Tree ===== */
 let imgIndex = 1;
 for (let l = 0; l < layers; l++) {
   const radius = baseRadius * (1 - l / layers);
@@ -27,13 +34,31 @@ for (let l = 0; l < layers; l++) {
     img.style.transform =
       `rotateY(${angle}deg)
        translateZ(${radius}px)
-       translateY(${-y}px)
-       translate3d(0,0,0)`;
+       translateY(${-y}px)`;
 
-    img.addEventListener("click", e => {
-      e.stopPropagation();
+    /* Tap / Click */
+    let downX = 0;
+    img.addEventListener("touchstart", e => {
+      downX = e.touches[0].clientX;
+      img.classList.add("active");
+    });
+
+    img.addEventListener("touchend", e => {
+      img.classList.remove("active");
       viewerImg.src = img.src;
-      viewer.classList.remove("hidden");
+      viewer.classList.add("show");
+    });
+
+    img.addEventListener("mousedown", e => {
+      img.classList.add("active");
+      e.stopPropagation();
+    });
+
+    img.addEventListener("mouseup", e => {
+      img.classList.remove("active");
+      viewerImg.src = img.src;
+      viewer.classList.add("show");
+      e.stopPropagation();
     });
 
     tree.appendChild(img);
@@ -43,55 +68,54 @@ for (let l = 0; l < layers; l++) {
 
 /* ===== Close Viewer ===== */
 viewer.addEventListener("click", () => {
-  viewer.classList.add("hidden");
+  viewer.classList.remove("show");
 });
 
-/* ===== Rotation (Mouse + Touch, RAF) ===== */
-let isDragging = false;
+/* ===== Rotation (Mouse + Touch) ===== */
+let dragging = false;
 let lastX = 0;
-let targetRotation = 0;
-let currentRotation = 0;
 
+scene.addEventListener("mousedown", e => {
+  dragging = true;
+  lastX = e.clientX;
+});
+
+scene.addEventListener("mousemove", e => {
+  if (!dragging) return;
+  targetRotation += (e.clientX - lastX) * 0.35;
+  lastX = e.clientX;
+});
+
+window.addEventListener("mouseup", () => dragging = false);
+
+/* Touch（关键：不 passive） */
+scene.addEventListener("touchstart", e => {
+  dragging = true;
+  lastX = e.touches[0].clientX;
+});
+
+scene.addEventListener("touchmove", e => {
+  if (!dragging) return;
+  targetRotation += (e.touches[0].clientX - lastX) * 0.35;
+  lastX = e.touches[0].clientX;
+});
+
+scene.addEventListener("touchend", () => dragging = false);
+
+/* ===== Animation Loop ===== */
 function animate() {
   currentRotation += (targetRotation - currentRotation) * 0.08;
-  tree.style.transform =
-    `translate3d(-50%, -50%, 0) rotateY(${currentRotation}deg)`;
+  updateTransform();
   requestAnimationFrame(animate);
 }
+updateTransform();
 animate();
 
-function startDrag(x) {
-  isDragging = true;
-  lastX = x;
-}
-
-function moveDrag(x) {
-  if (!isDragging) return;
-  targetRotation += (x - lastX) * 0.35;
-  lastX = x;
-}
-
-function endDrag() {
-  isDragging = false;
-}
-
-/* Mouse */
-scene.addEventListener("mousedown", e => startDrag(e.clientX));
-scene.addEventListener("mousemove", e => moveDrag(e.clientX));
-window.addEventListener("mouseup", endDrag);
-
-/* Touch */
-scene.addEventListener("touchstart", e =>
-  startDrag(e.touches[0].clientX), { passive: true });
-scene.addEventListener("touchmove", e =>
-  moveDrag(e.touches[0].clientX), { passive: true });
-scene.addEventListener("touchend", endDrag);
-
-/* ===== Snow Effect (Canvas) ===== */
+/* ===== Snow ===== */
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
-
 let w, h;
+
 function resize() {
   w = canvas.width = window.innerWidth;
   h = canvas.height = window.innerHeight;
@@ -99,7 +123,7 @@ function resize() {
 resize();
 window.addEventListener("resize", resize);
 
-const flakes = Array.from({ length: 80 }, () => ({
+const flakes = Array.from({ length: 70 }, () => ({
   x: Math.random() * w,
   y: Math.random() * h,
   r: Math.random() * 2 + 1,
