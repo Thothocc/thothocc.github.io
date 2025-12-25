@@ -4,17 +4,24 @@ const tree = document.getElementById("tree");
 const viewer = document.getElementById("viewer");
 const viewerImg = document.getElementById("viewer-img");
 
-cover.onclick = () => {
+/* ===== Enter ===== */
+cover.addEventListener("click", () => {
   cover.classList.add("hidden");
   scene.classList.remove("hidden");
-  createTree();
-};
 
-function createTree() {
+  initTree();
+});
+
+/* ===== Create Tree ===== */
+function initTree() {
+  tree.innerHTML = "";
+  tree.style.transform = "translate(-50%, -50%) rotateY(0deg)";
+
   const layers = 10;
   const perLayer = 10;
-  const baseRadius = 300;
-  const heightStep = 40;
+  const baseRadius = 320;
+  const heightStep = 38;
+
   let imgIndex = 1;
 
   for (let l = 0; l < layers; l++) {
@@ -24,6 +31,7 @@ function createTree() {
     for (let i = 0; i < perLayer; i++) {
       const angle = (360 / perLayer) * i;
       const img = document.createElement("img");
+
       img.src = `images/tree/${imgIndex}.jpg`;
       img.className = "photo";
 
@@ -33,11 +41,11 @@ function createTree() {
         translateY(${-y}px)
       `;
 
-      img.onclick = (e) => {
+      img.addEventListener("click", e => {
         e.stopPropagation();
         viewerImg.src = img.src;
         viewer.classList.remove("hidden");
-      };
+      });
 
       tree.appendChild(img);
       imgIndex++;
@@ -45,24 +53,26 @@ function createTree() {
   }
 }
 
-/* ===== Drag rotate ===== */
-let isDown = false;
-let startX = 0;
+/* ===== Drag Rotate ===== */
+let dragging = false;
+let lastX = 0;
 let rotateY = 0;
 
-scene.onmousedown = e => {
-  isDown = true;
-  startX = e.clientX;
-};
+scene.addEventListener("mousedown", e => {
+  dragging = true;
+  lastX = e.clientX;
+});
 
-scene.onmousemove = e => {
-  if (!isDown) return;
-  rotateY += (e.clientX - startX) * 0.3;
-  startX = e.clientX;
+scene.addEventListener("mousemove", e => {
+  if (!dragging) return;
+  rotateY += (e.clientX - lastX) * 0.3;
+  lastX = e.clientX;
   tree.style.transform = `translate(-50%, -50%) rotateY(${rotateY}deg)`;
-};
+});
 
-scene.onmouseup = () => isDown = false;
+window.addEventListener("mouseup", () => dragging = false);
 
-/* ===== Close viewer ===== */
-viewer.onclick = () => viewer.classList.add("hidden");
+/* ===== Close Viewer ===== */
+viewer.addEventListener("click", () => {
+  viewer.classList.add("hidden");
+});
