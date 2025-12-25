@@ -1,4 +1,4 @@
-* {
+/* * {
   box-sizing: border-box;
   -webkit-user-select: none;
   user-select: none;
@@ -111,4 +111,78 @@ body {
   max-width: 85%;
   max-height: 85%;
   border-radius: 10px;
+} */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 背景图 */
+#background {
+  position: fixed;
+  inset: 0;
+  background: url("background.jpg") center / cover no-repeat;
+  z-index: -1;
+}
+
+/* 星星：固定在树中轴线上方 */
+#star {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  z-index: 2;
+}
+
+/* 3D 场景 */
+#scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1200px;
+}
+
+/* 树本体：唯一允许 rotateY 的地方 */
+#tree {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
+}
+
+/* 照片 */
+.photo {
+  position: absolute;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  cursor: pointer;
+}
+
+/* 查看器 */
+#viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#viewer.show {
+  display: flex;
+}
+
+#viewer img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
 }
