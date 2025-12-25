@@ -45,3 +45,40 @@ body {
   font-size: 6rem;
   text-decoration: none;
 }
+
+/* =========================
+   Gift breathing animation
+   ========================= */
+
+#gift {
+  position: absolute;
+  left: 50%;
+  top: 65%; /* 稍微偏下，视觉更稳 */
+  transform: translate(-50%, -50%);
+  
+  font-size: clamp(64px, 12vw, 120px);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+
+  animation: gift-breath 2.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 点击时稍微缩一下，增强反馈 */
+#gift:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* 呼吸动画 */
+@keyframes gift-breath {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
