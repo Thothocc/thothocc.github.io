@@ -1,4 +1,11 @@
-/* ===== 背景 ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 背景图 */
 #background {
   position: fixed;
   inset: 0;
@@ -6,89 +13,61 @@
   z-index: -1;
 }
 
-/* ===== 雪花 ===== */
-#snow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
+/* 星星：固定在树中轴线上方 */
+#star {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
   z-index: 2;
 }
 
-/* ===== 场景 ===== */
+/* 3D 场景 */
 #scene {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 900px;
-}
-
-/* 移动端透视 */
-@media (max-width: 768px) {
-  #scene {
-    perspective: 600px;
-  }
-}
-
-/* ===== 树 ===== */
-#tree {
   position: relative;
-  transform-style: preserve-3d;
-  will-change: transform;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1200px;
 }
 
-/* ===== 照片 ===== */
-.photo {
-  position: absolute;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.photo.active {
-  box-shadow: 0 0 15px rgba(255,255,255,0.8);
-}
-
-/* ===== 星星 ===== */
-#star {
+/* 树本体：唯一允许 rotateY 的地方 */
+#tree {
   position: absolute;
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2.5rem;
-  z-index: 3;
+  transform-style: preserve-3d;
 }
 
-/* ===== 查看器 ===== */
+/* 照片 */
+.photo {
+  position: absolute;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  cursor: pointer;
+}
+
+/* 查看器 */
 #viewer {
   position: fixed;
   inset: 0;
+  background: rgba(0,0,0,0.1);
   display: none;
   justify-content: center;
   align-items: center;
-  background: rgba(0,0,0,0.6);
-  z-index: 5;
 }
 
 #viewer.show {
   display: flex;
 }
 
-#viewer-img {
+#viewer img {
   max-width: 90%;
   max-height: 90%;
-  box-shadow: 0 0 20px rgba(255,255,255,0.8);
   border-radius: 8px;
-}
-
-/* ===== 移动端适配安全区 ===== */
-@supports(padding: env(safe-area-inset-top)) {
-  body {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
 }
