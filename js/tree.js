@@ -158,8 +158,8 @@ const perLayer = 11;
 const baseRadius = 180;
 const heightStep = 26;
 
-/* ===== Center alignment ===== */
-const STAR_Y_RATIO = 0.2; // 星星在屏幕高度 20%
+/* ===== World Center ===== */
+const STAR_Y_RATIO = 0.2;
 let centerX = window.innerWidth / 2;
 let centerY = window.innerHeight * STAR_Y_RATIO;
 
@@ -167,9 +167,9 @@ let centerY = window.innerHeight * STAR_Y_RATIO;
 let currentRotation = 0;
 let targetRotation = 0;
 
-/* 树的世界变换：只在这里统一 */
 function updateTransform() {
   tree.style.transform = `
+    translate3d(-50%, 0, 0)
     translate3d(${centerX}px, ${centerY}px, 0)
     rotateY(${currentRotation}deg)
   `;
@@ -180,12 +180,11 @@ let imgIndex = 1;
 
 for (let l = 0; l < layers; l++) {
   const radius = baseRadius * (1 - l / layers);
-  const y = l * heightStep; // 向下铺展
+  const y = l * heightStep; // 向下生长
 
   for (let i = 0; i < perLayer; i++) {
     const img = document.createElement("img");
     img.src = `images/tree/${imgIndex}.jpg`;
-    img.alt = `Christmas photo ${imgIndex}`;
     img.className = "photo";
 
     const angle = (360 / perLayer) * i;
@@ -196,7 +195,6 @@ for (let l = 0; l < layers; l++) {
       translateY(${y}px)
     `;
 
-    /* Click / Tap */
     img.addEventListener("click", e => {
       viewerImg.src = img.src;
       viewer.classList.add("show");
@@ -208,12 +206,10 @@ for (let l = 0; l < layers; l++) {
   }
 }
 
-/* ===== Close Viewer ===== */
-viewer.addEventListener("click", () => {
-  viewer.classList.remove("show");
-});
+/* ===== Viewer ===== */
+viewer.addEventListener("click", () => viewer.classList.remove("show"));
 
-/* ===== Rotation (Mouse + Touch) ===== */
+/* ===== Interaction ===== */
 let dragging = false;
 let lastX = 0;
 
@@ -231,7 +227,7 @@ scene.addEventListener("pointermove", e => {
 scene.addEventListener("pointerup", () => dragging = false);
 scene.addEventListener("pointercancel", () => dragging = false);
 
-/* ===== Animation Loop ===== */
+/* ===== Animation ===== */
 function animate() {
   currentRotation += (targetRotation - currentRotation) * 0.08;
   updateTransform();
@@ -240,45 +236,8 @@ function animate() {
 updateTransform();
 animate();
 
-/* ===== Resize handling ===== */
+/* ===== Resize ===== */
 window.addEventListener("resize", () => {
   centerX = window.innerWidth / 2;
   centerY = window.innerHeight * STAR_Y_RATIO;
 });
-
-/* ===== Snow ===== */
-const canvas = document.getElementById("snow");
-const ctx = canvas.getContext("2d");
-let w, h;
-
-function resizeCanvas() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-const flakes = Array.from({ length: 70 }, () => ({
-  x: Math.random() * w,
-  y: Math.random() * h,
-  r: Math.random() * 2 + 1,
-  v: Math.random() * 0.8 + 0.4
-}));
-
-function snow() {
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  flakes.forEach(f => {
-    ctx.beginPath();
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-    ctx.fill();
-    f.y += f.v;
-    if (f.y > h) {
-      f.y = -5;
-      f.x = Math.random() * w;
-    }
-  });
-  requestAnimationFrame(snow);
-}
-snow();
-
