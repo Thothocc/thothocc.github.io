@@ -156,31 +156,18 @@ const viewerImg = document.getElementById("viewer-img");
 const layers = 9;
 const perLayer = 11;
 const baseRadius = 180;
-const heightStep = 26;
+const heightStep = 28;
 
-/* ===== World Center ===== */
-const STAR_Y_RATIO = 0.2;
-let centerX = window.innerWidth / 2;
-let centerY = window.innerHeight * STAR_Y_RATIO;
-
-/* ===== Rotation ===== */
-let currentRotation = 0;
+/* ===== Rotation State ===== */
+let rotation = 0;
 let targetRotation = 0;
-
-function updateTransform() {
-  tree.style.transform = `
-    translate3d(-50%, 0, 0)
-    translate3d(${centerX}px, ${centerY}px, 0)
-    rotateY(${currentRotation}deg)
-  `;
-}
 
 /* ===== Build Tree ===== */
 let imgIndex = 1;
 
 for (let l = 0; l < layers; l++) {
   const radius = baseRadius * (1 - l / layers);
-  const y = l * heightStep; // 向下生长
+  const y = l * heightStep; // 永远向下
 
   for (let i = 0; i < perLayer; i++) {
     const img = document.createElement("img");
@@ -207,7 +194,9 @@ for (let l = 0; l < layers; l++) {
 }
 
 /* ===== Viewer ===== */
-viewer.addEventListener("click", () => viewer.classList.remove("show"));
+viewer.addEventListener("click", () => {
+  viewer.classList.remove("show");
+});
 
 /* ===== Interaction ===== */
 let dragging = false;
@@ -220,7 +209,7 @@ scene.addEventListener("pointerdown", e => {
 
 scene.addEventListener("pointermove", e => {
   if (!dragging) return;
-  targetRotation += (e.clientX - lastX) * 0.35;
+  targetRotation += (e.clientX - lastX) * 0.4;
   lastX = e.clientX;
 });
 
@@ -229,15 +218,8 @@ scene.addEventListener("pointercancel", () => dragging = false);
 
 /* ===== Animation ===== */
 function animate() {
-  currentRotation += (targetRotation - currentRotation) * 0.08;
-  updateTransform();
+  rotation += (targetRotation - rotation) * 0.08;
+  tree.style.transform = `rotateY(${rotation}deg)`;
   requestAnimationFrame(animate);
 }
-updateTransform();
 animate();
-
-/* ===== Resize ===== */
-window.addEventListener("resize", () => {
-  centerX = window.innerWidth / 2;
-  centerY = window.innerHeight * STAR_Y_RATIO;
-});
