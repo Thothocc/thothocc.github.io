@@ -5,12 +5,12 @@
   <title>Christmas Tree</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- CSP（不包含 frame-ancestors） -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  img-src 'self' data:;
                  style-src 'self' 'unsafe-inline';
-                 script-src 'self';
-                 frame-ancestors 'none';">
+                 script-src 'self';">
 
   <link rel="stylesheet" href="css/tree.css">
 </head>
@@ -20,12 +20,12 @@
 
 <div id="scene">
   <div id="tree">
-    <div id="star">⭐</div>
+    <div id="star" aria-hidden="true">⭐</div>
   </div>
 </div>
 
-<div id="viewer" class="hidden">
-  <img id="viewer-img" alt="Christmas memory enlarged">
+<div id="viewer" aria-hidden="true">
+  <img id="viewer-img" alt="Christmas memory">
 </div>
 
 <script src="js/tree.js"></script>
