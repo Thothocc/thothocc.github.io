@@ -1,196 +1,94 @@
-/* * {
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-body {
-  margin: 0;
-  overflow: hidden;
-  background: #000;
-}
-
-/* ===== Snow ===== */
-#snow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ===== Scene ===== */
-/* #scene {
-  position: fixed;
-  inset: 0;
-  background: url("../images/tree/background.jpg") center / cover no-repeat;
-  perspective: 900px;
-  z-index: 2;
-}
-
-#tree {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform-style: preserve-3d;
-  will-change: transform;
-} */
-
-#scene {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  perspective: 1200px;
-  background: url("../images/tree/background.jpg") center / cover no-repeat;
-  z-index: 2;
-}
-/* ===== Snow ===== */
-#snow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-#tree {
-  position: absolute;
-  top: 20%;                 /* 星星下方 */
-  left: 50%;
-  transform-style: preserve-3d;
-  transform: translateX(-50%);
-}
-
-.photo {
-  position: absolute;
-  left: 50%;
-  transform-style: preserve-3d;
-  transform-origin: center center;
-}
-
-
-/* ===== Star ===== */
-#star {
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, -250px, 0);
-  font-size: 2.4rem;
-  filter: drop-shadow(0 0 10px gold);
-  animation: starGlow 2.6s ease-in-out infinite;
-}
-
-@keyframes starGlow {
-  0%,100% { filter: drop-shadow(0 0 6px gold); }
-  50% { filter: drop-shadow(0 0 18px gold); }
-}
-
-/* ===== Photos ===== */
-.photo {
-  position: absolute;
-  width: 90px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 6px;
-  will-change: transform;
-}
-
-/* JS 控制高亮 */
-.photo.active {
-  box-shadow: 0 0 14px rgba(255,255,255,0.9);
-}
-
-/* ===== Viewer ===== */
-#viewer {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
-  z-index: 10;
-}
-
-#viewer.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-#viewer img {
-  max-width: 85%;
-  max-height: 85%;
-  border-radius: 10px;
-} */
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* 背景图 */
+/* ===== 背景 ===== */
 #background {
   position: fixed;
   inset: 0;
-  background: url("background.jpg") center / cover no-repeat;
+  background: url("../images/tree/background.jpg") center / cover no-repeat;
   z-index: -1;
 }
 
-/* 星星：固定在树中轴线上方 */
-#star {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 40px;
+/* ===== 雪花 ===== */
+#snow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
   z-index: 2;
 }
 
-/* 3D 场景 */
+/* ===== 场景 ===== */
 #scene {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  perspective: 1200px;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 900px;
 }
 
-/* 树本体：唯一允许 rotateY 的地方 */
+/* 移动端透视 */
+@media (max-width: 768px) {
+  #scene {
+    perspective: 600px;
+  }
+}
+
+/* ===== 树 ===== */
 #tree {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ===== 照片 ===== */
+.photo {
+  position: absolute;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.photo.active {
+  box-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
+
+/* ===== 星星 ===== */
+#star {
   position: absolute;
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  transform-style: preserve-3d;
+  font-size: 2.5rem;
+  z-index: 3;
 }
 
-/* 照片 */
-.photo {
-  position: absolute;
-  left: 50%;
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  transform-style: preserve-3d;
-  transform-origin: center center;
-  cursor: pointer;
-}
-
-/* 查看器 */
+/* ===== 查看器 ===== */
 #viewer {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
   display: none;
   justify-content: center;
   align-items: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 5;
 }
 
 #viewer.show {
   display: flex;
 }
 
-#viewer img {
+#viewer-img {
   max-width: 90%;
   max-height: 90%;
+  box-shadow: 0 0 20px rgba(255,255,255,0.8);
   border-radius: 8px;
+}
+
+/* ===== 移动端适配安全区 ===== */
+@supports(padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
