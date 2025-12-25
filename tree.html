@@ -21,6 +21,31 @@
        preload="auto"
        playsinline>
   </audio>
+
+  <script>
+    const bgm = document.getElementById("bgm");
+    const btn = document.getElementById("music-btn");
+  
+    let playing = false;
+  
+    function toggleMusic() {
+      if (!playing) {
+        bgm.muted = false;
+        bgm.play();        // 必须同步
+        playing = true;
+        btn.textContent = "⏸️";
+        localStorage.setItem("music", "on");
+      } else {
+        bgm.pause();
+        playing = false;
+        btn.textContent = "🎵";
+        localStorage.setItem("music", "off");
+      }
+    }
+  
+    /* 用 pointerdown，iOS 才认 */
+    btn.addEventListener("pointerdown", toggleMusic);
+  </script>
   
   <!-- 星星 -->
   <div id="star">⭐</div>
