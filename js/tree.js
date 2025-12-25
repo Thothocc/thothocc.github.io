@@ -294,16 +294,19 @@ function animate() {
 animate();
 
 
-/* ===== 雪花特效 ===== */
+/* ===== Snow ===== */
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
 let w, h;
-function resizeCanvas() {
+
+function resize() {
   w = canvas.width = window.innerWidth;
   h = canvas.height = window.innerHeight;
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+resize();
+window.addEventListener("resize", resize);
 
-const flakes = Array.from({ length: 90 }, () => ({
+const flakes = Array.from({ length: 70 }, () => ({
   x: Math.random() * w,
   y: Math.random() * h,
   r: Math.random() * 2 + 1,
